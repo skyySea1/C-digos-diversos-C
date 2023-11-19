@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <string.h>
+#include <locale.h>
 
 int main() {
+    setlocale(LC_ALL, "Portuguese"); // chama o cabeçalho locale e adiciona acentos e caracteres especiais
+
     char nome[50];
     int matricula;
     float nota1, nota2, nota3;
@@ -9,8 +13,10 @@ int main() {
     int totalAlunos = 0;
 
     printf("Digite o nome do aluno (ou '0' para encerrar): ");
-    scanf("%s", nome);
-
+    fgets(nome, sizeof(nome), stdin);
+    nome[strcspn(nome, "\n")] = '\0';  
+    // evita que o enter ou uma nova linha seja reconhecida como caractere, ele atribuir o valor 0 ao carácter nova linha, se tiver
+//em suma isso serve pra evitar bugs
     while (nome[0] != '0') {
         printf("Digite a matrícula do aluno: ");
         scanf("%d", &matricula);
@@ -43,14 +49,16 @@ int main() {
         totalAlunos++;
 
         printf("\nDigite o nome do próximo aluno (ou '0' para encerrar): ");
-        scanf("%s", nome);
+        getchar();  // Limpar o buffer do teclado antes de usar fgets
+        fgets(nome, sizeof(nome), stdin);
+        nome[strcspn(nome, "\n")] = '\0';
     }
 
     if (totalAlunos > 0) {
         float mediaTurma = somaNotas / totalAlunos;
         printf("\nMédia de notas da turma: %.2f\n", mediaTurma);
     } else {
-        printf("\nNenhum aluno foi inserido.\n");
+        printf("\nNenhum aluno inserido.\n");
     }
 
     return 0;
